@@ -1,13 +1,15 @@
 import { useState } from "react";
-import Resumen from "./Resumen";
+import { useClienteContext } from "./Context/clientContext";
+import { Link } from "react-router-dom";
 
 const IngresoDatos = () => {
   const [tipoDocumento, setTipoDocumento] = useState("");
   const [numeroDocumento, setNumeroDocumento] = useState("");
   const [botonBuscarHabilitado, setBotonBuscarHabilitado] = useState(false);
-  const [informacionCliente, setInformacionCliente] = useState();
 
   const tiposDocumento = ["Cedula de ciudadanía", "Pasaporte"];
+
+  const { guardarInformacionCliente } = useClienteContext();
 
   const handleTipoDocumentoChange = (event) => {
     setTipoDocumento(event.target.value);
@@ -33,7 +35,8 @@ const IngresoDatos = () => {
       td: tipoDocumento,
       numDoc: numeroDocumento,
     };
-    setInformacionCliente(datos);
+    guardarInformacionCliente(datos);
+    setBotonBuscarHabilitado(!botonBuscarHabilitado);
   };
 
   return (
@@ -41,6 +44,9 @@ const IngresoDatos = () => {
       <div className="row">
         <div className="">
           <h2 className="text-center">Consulta de Cliente</h2>
+          <label className="mb-4" aria-disabled>
+            Todos los campos son obligatorios
+          </label>
           <form className="mt-4">
             <div className="form-group mb-3">
               <label className="pb-2">Tipo de Documento</label>
@@ -51,7 +57,7 @@ const IngresoDatos = () => {
                 onChange={handleTipoDocumentoChange}
               >
                 <option value="" disabled>
-                  Seleccione...
+                  Seleccione el tipo de documento
                 </option>
                 {tiposDocumento.map((tipo) => (
                   <option key={tipo} value={tipo}>
@@ -73,21 +79,19 @@ const IngresoDatos = () => {
               />
             </div>
 
-            <button
-              type="button"
-              className={`${
-                botonBuscarHabilitado ? "btn-primary" : "btn-secondary"
-              } btn mt-4 w-100`}
-              onClick={handleBuscarClick}
-              disabled={!botonBuscarHabilitado}
-            >
-              Buscar
-            </button>
+            <Link to={"/resumen"}>
+              <button
+                type="button"
+                className={`${
+                  botonBuscarHabilitado ? "btn-primary" : "btn-secondary"
+                } btn mt-4 w-100`}
+                onClick={handleBuscarClick}
+                disabled={!botonBuscarHabilitado}
+              >
+                Buscar
+              </button>
+            </Link>
           </form>
-
-          {informacionCliente && (
-            <Resumen informacionCliente={informacionCliente} />
-          )}
         </div>
       </div>
     </div>
