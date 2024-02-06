@@ -1,33 +1,33 @@
 import { useState } from "react";
-import { useClienteContext } from "./Context/clientContext";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useClienteContext } from "./Context/useClienteContext";
 
 const IngresoDatos = () => {
   const [tipoDocumento, setTipoDocumento] = useState("");
   const [numeroDocumento, setNumeroDocumento] = useState("");
   const [botonBuscarHabilitado, setBotonBuscarHabilitado] = useState(false);
+  const [onlyNum, setOnlyNum] = useState("");
 
   const tiposDocumento = ["Cedula de ciudadanía", "Pasaporte"];
+  const navigate = useNavigate();
 
   const { guardarInformacionCliente } = useClienteContext();
 
   const handleTipoDocumentoChange = (event) => {
+    const typeDoc = event.target.value;
     setTipoDocumento(event.target.value);
-    setBotonBuscarHabilitado(validarCampos());
+    setBotonBuscarHabilitado(validarCampos(typeDoc, onlyNum));
   };
 
   const handleNumeroDocumentoChange = (event) => {
     const numero = event.target.value.replace(/\D/g, ""); // Eliminar no números
+    setOnlyNum(numero);
     setNumeroDocumento(numero.replace(/\B(?=(\d{3})+(?!\d))/g, ".")); // Agregar separadores de miles
-    setBotonBuscarHabilitado(validarCampos());
+    setBotonBuscarHabilitado(validarCampos(tipoDocumento, numero));
   };
 
-  const validarCampos = () => {
-    return (
-      tipoDocumento !== "" &&
-      numeroDocumento.length >= 8 &&
-      numeroDocumento.length <= 11
-    );
+  const validarCampos = (typeDoc, numDoc) => {
+    return typeDoc !== "" && numDoc.length >= 8 && numDoc.length <= 11;
   };
 
   const handleBuscarClick = () => {
@@ -37,6 +37,7 @@ const IngresoDatos = () => {
     };
     guardarInformacionCliente(datos);
     setBotonBuscarHabilitado(!botonBuscarHabilitado);
+    navigate("/resumen");
   };
 
   return (
@@ -44,10 +45,10 @@ const IngresoDatos = () => {
       <div className="row">
         <div className="">
           <h2 className="text-center">Consulta de Cliente</h2>
-          <label className="mb-4" aria-disabled>
+          <label className="mb-4 d-flex justify-content-center" aria-disabled>
             Todos los campos son obligatorios
           </label>
-          <form className="mt-4">
+          <form className="mt-4 was-validated">
             <div className="form-group mb-3">
               <label className="pb-2">Tipo de Documento</label>
               <select
@@ -55,6 +56,7 @@ const IngresoDatos = () => {
                 id="tipoDocumento"
                 value={tipoDocumento}
                 onChange={handleTipoDocumentoChange}
+                required
               >
                 <option value="" disabled>
                   Seleccione el tipo de documento
@@ -68,7 +70,9 @@ const IngresoDatos = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="numeroDocumento">Número de Documento</label>
+              <label htmlFor="numeroDocumento" className="pb-2">
+                Número de Documento
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -76,21 +80,24 @@ const IngresoDatos = () => {
                 placeholder="Ingrese número de documento"
                 value={numeroDocumento}
                 onChange={handleNumeroDocumentoChange}
+                maxLength={13}
+                required
               />
+              <div className="invalid-feedback">
+                Por favor ingrese su número de documento
+              </div>
             </div>
 
-            <Link to={"/resumen"}>
-              <button
-                type="button"
-                className={`${
-                  botonBuscarHabilitado ? "btn-primary" : "btn-secondary"
-                } btn mt-4 w-100`}
-                onClick={handleBuscarClick}
-                disabled={!botonBuscarHabilitado}
-              >
-                Buscar
-              </button>
-            </Link>
+            <button
+              type="button"
+              className={`${
+                botonBuscarHabilitado ? "btn-primary" : "btn-secondary"
+              } btn mt-4 w-100`}
+              onClick={handleBuscarClick}
+              disabled={!botonBuscarHabilitado}
+            >
+              Buscar
+            </button>
           </form>
         </div>
       </div>

@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import ErrorPage from "./ErrorPage";
 import { Link } from "react-router-dom";
-import { useClienteContext } from "./Context/clientContext";
+import { useClienteContext } from "./Context/useClienteContext";
 
 const Resumen = () => {
   const { informacionCliente } = useClienteContext();
@@ -59,9 +59,8 @@ const Resumen = () => {
         <div className="container mt-5 d-flex justify-content-center align-items-center">
           <div className="row">
             <div className="">
-              <h2 className="text-center">Información del Cliente</h2>
+              <h2 className="text-center">Información básica</h2>
               {dataClient.map((client) => {
-                console.log(client);
                 return (
                   <form key={client.numero_documento} className="mt-4">
                     <div className="input-group input-group-sm mb-3">
@@ -69,7 +68,7 @@ const Resumen = () => {
                         htmlFor="primerNombre"
                         className="input-group-text"
                       >
-                        Primer nombre:
+                        Primer nombre
                       </label>
                       <input
                         className="form-control"
@@ -86,7 +85,7 @@ const Resumen = () => {
                         htmlFor="primerNombre"
                         className="input-group-text"
                       >
-                        Primer apellido:
+                        Primer apellido
                       </label>
                       <input
                         className="form-control"
@@ -132,40 +131,3 @@ Resumen.propTypes = {
 };
 
 export default Resumen;
-
-{
-  /* 
-      
-          <h2 className="text-center">Información del cliente</h2>
-          <form className="mt-4">
-            <div className="form-group mb-3">
-              <label className="pb-2">Primer nombre</label>
-              
-                <option value="" disabled>
-                  Seleccione...
-                </option>
-                {tiposDocumento.map((tipo) => (
-                  <option key={tipo} value={tipo}>
-                    {tipo}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="numeroDocumento">Número de Documento</label>
-              <input
-                type="text"
-                className="form-control"
-                id="numeroDocumento"
-                placeholder="Ingrese número de documento"
-                value={numeroDocumento}
-                onChange={handleNumeroDocumentoChange}
-              />
-            </div>
-
-            
-          </form>
-        </div>
-      </div> */
-}

@@ -1,9 +1,9 @@
-import { createContext, useContext, useState } from "react";
-import { propTypes } from "react-bootstrap/esm/Image";
+import { createContext, useState } from "react";
+import PropTypes from "prop-types";
 
 const ClienteContext = createContext();
 
-export const ClienteProvider = ({ children }) => {
+const ClienteProvider = ({ children }) => {
   const [informacionCliente, setInformacionCliente] = useState(null);
 
   const guardarInformacionCliente = (datos) => {
@@ -20,9 +20,12 @@ export const ClienteProvider = ({ children }) => {
 };
 
 ClienteProvider.propTypes = {
-  children: propTypes.node,
+  children: PropTypes.node,
 };
 
-export const useClienteContext = () => {
-  return useContext(ClienteContext);
-};
+
+
+export {
+  ClienteContext,
+  ClienteProvider,
+}
